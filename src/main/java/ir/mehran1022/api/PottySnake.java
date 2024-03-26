@@ -17,14 +17,14 @@ import java.util.Map;
  * @link <a href="https://potty-snake.github.io">Javadoc</a>
  */
 @SuppressWarnings({"unchecked", "unused"})
-public final class PottyYaml {
+public final class PottySnake {
 
     @Getter
     private final Yaml snakeYaml;
     private final String filePath;
     private Map<String, Object> data;
 
-    public PottyYaml(String filePath) throws IOException {
+    public PottySnake(String filePath) throws IOException {
         this.snakeYaml = new Yaml(getDumperOptions());
         data = new LinkedHashMap<>();
         this.filePath = filePath;
