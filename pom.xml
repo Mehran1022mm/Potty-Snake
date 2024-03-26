@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ir.mehran1022.api</groupId>
-    <artifactId>Potty-Snake</artifactId>
+    <artifactId>potty-snake</artifactId>
     <version>1.0</version>
 
     <properties>
