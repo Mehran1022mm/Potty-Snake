@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./assets/img/github-mark-white.png" type="image/x-icon">
+    <title>Potty Snake - YAML library for Java</title>
+    <style>
+        body {
+            background-color: #171717;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            width: 80%;
+            max-width: 1200px;
+            margin: auto;
+            box-shadow: 0 8px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .text-section,
+        .image-section {
+            flex: 1 1 300px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        h1 {
+            font-size: 2em;
+        }
+
+        p {
+            font-size: 1em;
+        }
+
+        hr {
+            width: 20%;
+            border: 2px solid #8ed871;
+            border-radius: 5px;
+        }
+
+        .button {
+            background-color: transparent;
+            border: 2px solid #7DDA58;
+            color: #7DDA58;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 20px 10px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .button:hover {
+            background-color: rgba(125, 218, 88, 0.1);
+            box-shadow: 0 4px 10px rgba(125, 218, 88, 0.3);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .footer {
+            width: 100%;
+            background-color: #171717;
+            color: #aaa;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 0.8em;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .text-section,
+            .image-section {
+                margin-bottom: 20px;
+            }
+
+            .footer p {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="text-section">
+            <h1>🐍 Potty-Snake</h1>
+            <hr>
+            <p>
+                Potty-Snake is a Java library that simplifies the creation, manipulation, and management of YAML files.
+                Leveraging the
+                power of SnakeYAML, it provides an accessible and efficient way to handle YAML data for applications of
+                any scale.
+            </p>
+            <hr>
+            <div class="button-container">
+                <button class="button"
+                    onclick="redirectToPage('https://github.com/Mehran1022mm/Potty-Snake')">Github</button>
+                <button class="button" onclick="redirectToPage('/docs')">Javadoc</button>
+            </div>
+        </div>
+        <div class="image-section">
+            <img src="./assets/img/snake.png" alt="Descriptive Alt Text">
+        </div>
+    </div>
+    <footer class="footer">
+        <p>© 2024 Mehran1022. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function redirectToPage(url) {
+            window.location.href = url;
+        }
+    </script>
+</body>
+
+</html>
