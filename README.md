@@ -24,7 +24,7 @@ Add the following dependency to your `pom.xml` for Maven:
 <dependency>
     <groupId>ir.mehran1022.api</groupId>
     <artifactId>potty-snake</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
 </dependency>
 ```
 Or just copy & paste the `PottySnake.java` class.
