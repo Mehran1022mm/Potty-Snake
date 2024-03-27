@@ -7,50 +7,59 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
- * A simple library for managing YAML files using SnakeYAML.
+ * A robust library for managing YAML files utilizing the SnakeYAML library.
+ * This class provides methods to load, save, and manipulate YAML data with ease.
  * @author Mehran1022
- * @version 1.0
- * @link <a href="https://potty-snake.github.io">Javadoc</a>
+ * @version 1.2
  */
 @SuppressWarnings({"unchecked", "unused"})
 public final class PottySnake {
 
+    // The SnakeYAML parser instance for YAML operations
     @Getter
     private final Yaml snakeYaml;
+
+    // The path to the YAML file managed by this instance
     private final String filePath;
+
+    // The in-memory representation of the YAML data as a nested map
     private Map<String, Object> data;
 
+    /**
+     * Constructs a new PottySnake instance associated with the given file path.
+     * It initializes the parser and loads the existing YAML content into memory.
+     *
+     * @param filePath The path to the YAML file to manage.
+     * @throws IOException If the file cannot be read or written to.
+     */
     public PottySnake(String filePath) throws IOException {
         this.snakeYaml = new Yaml(getDumperOptions());
-        data = new LinkedHashMap<>();
         this.filePath = filePath;
-
+        data = new LinkedHashMap<>();
         load();
         save();
     }
 
     /**
-     * Loads the YAML content from the specified file path into the data map.
-     * This method reads the file content as a string and uses the SnakeYAML library to parse it into a map.
-     * If the file content is not in a valid YAML format, the parser may throw an exception.
+     * Loads the YAML content from the file into the data map.
+     * If the file is empty or the content is invalid, an empty map is initialized.
      *
-     * @throws IOException If there is an issue reading the file, such as if the file does not exist or is not accessible.
+     * @throws IOException If the file cannot be read.
      */
     public void load() throws IOException {
         String content = Files.readString(Path.of(filePath));
-        data = getSnakeYaml().load(content);
+        Map<String, Object> loadedData = getSnakeYaml().load(content);
+        data = Objects.requireNonNullElseGet(loadedData, LinkedHashMap::new);
     }
 
     /**
-     * Saves the current data map content into the YAML file at the specified file path.
-     * This method converts the map into a YAML-formatted string using the SnakeYAML library and writes it to the file.
-     * If there are issues during writing to the file, such as lack of write permissions or disk space, an IOException may be thrown.
+     * Saves the in-memory data map to the YAML file.
+     * The data is converted to a YAML-formatted string and written to the file.
      *
-     * @throws IOException If there is an issue writing to the file.
+     * @throws IOException If the file cannot be written to.
      */
     public void save() throws IOException {
         String content = getSnakeYaml().dump(data);
@@ -58,10 +67,11 @@ public final class PottySnake {
     }
 
     /**
-     * Retrieves an entry from the YAML data.
+     * Retrieves a value from the YAML data using a key.
+     * The key can represent a nested path with dot notation.
      *
-     * @param key      The key for the entry, which can be a simple or nested key.
-     * @return The value of the entry, or null if not found.
+     * @param key The key to retrieve the value for.
+     * @return The value, or null if the key does not exist.
      */
     public Object getEntry(String key) {
         String[] keys = key.split("\\.");
@@ -73,11 +83,44 @@ public final class PottySnake {
             if (value instanceof Map) {
                 currentMap = (Map<String, Object>) value;
             } else {
-                return null; // The key does not exist in a structure
+                return null; // The key does not exist
             }
         }
 
         return currentMap.get(keys[keys.length - 1]);
+    }
+
+    /**
+     * Adds an entry to the specified section in the YAML data.
+     * If the section is a map, the entry is added to it.
+     * If the section is a list, the value is appended to the list.
+     * If the section does not exist, it is created as a map and the entry is added.
+     *
+     * @param section The section under which the entry will be added.
+     * @param key     The key for the entry within the section, or null if adding to a list.
+     * @param value   The value to add for the entry.
+     */
+    public void addEntry(String section, String key, Object value) throws IOException {
+        Object sectionObject = data.get(section);
+
+        if (sectionObject instanceof Map) {
+            // Section exists and is a map, add the key-value pair to it
+            ((Map<String, Object>) sectionObject).put(key, value);
+        } else if (sectionObject instanceof List) {
+            // Section exists and is a list, append the value to the list
+            ((List<Object>) sectionObject).add(value);
+        } else if (key == null) {
+            // If key is null, assume adding to a list and create a new list with the value
+            List<Object> newList = new ArrayList<>();
+            newList.add(value);
+            data.put(section, newList);
+        } else {
+            // Section does not exist or is null, create a new map and add the key-value pair
+            Map<String, Object> newMap = new LinkedHashMap<>();
+            newMap.put(key, value);
+            data.put(section, newMap);
+        }
+        save();
     }
 
     /**
@@ -86,7 +129,7 @@ public final class PottySnake {
      * @param key      The key for the entry, which can be a simple or nested key.
      * @param value    The value to set for the entry.
      */
-    public void setEntry(String key, Object value) {
+    public void setEntry(String key, Object value) throws IOException {
         String[] keys = key.split("\\.");
         Map<String, Object> currentMap = data;
 
@@ -104,6 +147,7 @@ public final class PottySnake {
         }
 
         currentMap.put(keys[keys.length - 1], value);
+        save();
     }
 
     /**
@@ -111,7 +155,7 @@ public final class PottySnake {
      *
      * @param key      The key for the entry, which can be a simple or nested key.
      */
-    public void removeEntry(String key) {
+    public void removeEntry(String key) throws IOException {
         String[] keys = key.split("\\.");
         Map<String, Object> currentMap = data;
 
@@ -126,15 +170,20 @@ public final class PottySnake {
         }
 
         currentMap.remove(keys[keys.length - 1]);
+        save();
     }
 
     /**
      * Creates a new section in the YAML data. If the section already exists, it will be overwritten.
      *
-     * @param section  The section key, which can be a simple or nested key.
+     * @param section The section key, which can be a simple or nested key.
      */
-    public void createSection(String section) {
-        setEntry(section, new LinkedHashMap<>());
+    public void createSection(String section) throws IOException {
+        if (data.get(section) instanceof Map) {
+            return; // Section already exists as a map, do nothing
+        }
+        data.put(section, null);
+        save();
     }
 
     /**
@@ -154,7 +203,7 @@ public final class PottySnake {
      * @param oldSection The current section key.
      * @param newSection The new section key.
      */
-    public void renameSection(String oldSection, String newSection) {
+    public void renameSection(String oldSection, String newSection) throws IOException {
         if (hasSection(oldSection)) {
             Object sectionData = getEntry(oldSection);
             removeEntry(oldSection);
@@ -162,6 +211,21 @@ public final class PottySnake {
         }
     }
 
+    /**
+     * Creates a new list under the specified section in the YAML data.
+     * If the section already exists, it will be overwritten with a new list.
+     *
+     * @param section The section key, which can be a simple or nested key.
+     */
+    public void createList(String section) throws IOException {
+        // Check if the section already exists and is a list
+        if (data.get(section) instanceof List) {
+            return; // Section already exists as a list, do nothing
+        }
+        // Otherwise, create a new list under the section
+        data.put(section, new ArrayList<>());
+        save();
+    }
 
     private DumperOptions getDumperOptions() {
         final DumperOptions dumperOptions = new DumperOptions();

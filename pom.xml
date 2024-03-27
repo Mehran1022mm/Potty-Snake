@@ -6,7 +6,20 @@
 
     <groupId>ir.mehran1022.api</groupId>
     <artifactId>potty-snake</artifactId>
-    <version>1.0</version>
+    <version>1.2</version>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.6.2</version>
+                <configuration>
+                    <stylesheetfile>./theme/dracula-javadoc8.css</stylesheetfile>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
