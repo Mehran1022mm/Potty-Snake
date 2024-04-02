@@ -9,11 +9,11 @@ Potty-Snake is a Java library that simplifies the creation, manipulation, and ma
 - **Flexible**: Supports complex YAML structures, including nested objects.
 - **Reliable**: Built on the robust SnakeYAML engine.
 
-## Getting Started
+## 📚 Getting Started
 
 ### Prerequisites
 
-- Java 8 or higher
+- Java 17
 - Maven (Optional)
 
 ### Installation
@@ -24,19 +24,17 @@ Add the following dependency to your `pom.xml` for Maven:
 <dependency>
     <groupId>ir.mehran1022.api</groupId>
     <artifactId>potty-snake</artifactId>
-    <version>1.2</version>
+    <version>1.3</version>
 </dependency>
 ```
-Or just copy & paste the `PottySnake.java` class.
+Or just copy & paste the `PottySnake.java` class and install the dependencies.
 
 ### Usage
 
 Create an instance of PottySnake and use it to load, manipulate, and save YAML data:
 
 ```java
-PottySnake pottySnake = new PottySnake("path/to/file.yaml");
-pottySnake.load();
-pottySnake.save();
+PottySnake pottySnake = new PottySnake("path/to/file.yaml", false); // Non thread-safe
 
 // Example utility method
 Object object = pottySnake.getEntry(myKey);
